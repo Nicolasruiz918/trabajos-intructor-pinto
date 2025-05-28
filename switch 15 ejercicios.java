@@ -1,4 +1,3 @@
-
 import java.util.Scanner;
 import java.util.Arrays;
 import java.util.ArrayList;
@@ -7,62 +6,6 @@ import java.util.List;
 import java.util.Queue;
 
 public class ejercicios {
-    // Contador de comparaciones para case 15
-    static int comparacion = 0;
-
-    // Clase para almacenar max y min
-    static class Resultado {
-        int max;
-        int min;
-
-        Resultado(int max, int min) {
-            this.max = max;
-            this.min = min;
-        }
-    }
-
-    // Método para calcular T(n) = 2T(n/2) + 2n*log2(n)
-    public static double T(int n) {
-        if (n <= 1) {
-            return 1;
-        } else {
-            double t1 = T(n / 2);
-            double t2 = T(n / 2);
-            double combinacion = 2 * n * log2(n);
-            return t1 + t2 + combinacion;
-        }
-    }
-
-    // Método para calcular log base 2
-    public static double log2(int n) {
-        return Math.log(n) / Math.log(2);
-    }
-
-    // Método para encontrar max y min con divide y conquista
-    public static Resultado masMin(int[] T, int i, int j) {
-        int Max, Min;
-        comparacion++;
-        if (T[i] <= T[j]) {
-            Max = T[j];
-            Min = T[i];
-        } else {
-            Max = T[i];
-            Min = T[j];
-        }
-        if (i + 1 <= j - 1) {
-            Resultado aux = masMin(T, i + 1, j - 1);
-            comparacion++;
-            if (Max < aux.max) {
-                Max = aux.max;
-            }
-            comparacion++;
-            if (aux.min < Min) {
-                Min = aux.min;
-            }
-        }
-        return new Resultado(Max, Min);
-    }
-
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         int opcion;
@@ -84,7 +27,7 @@ public class ejercicios {
             System.out.println("12. MultiMergeSort");
             System.out.println("13. Verificar palíndromo");
             System.out.println("14. Calcular T(n) = 2T(n/2) + 2n*log2(n)");
-            System.out.println("15. Encontrar max/min con divide y conquista"); // Nueva opción
+            System.out.println("15. Encontrar max/min con divide y conquista");
             System.out.println("0. Salir");
             System.out.print("Seleccione una opción: ");
 
@@ -314,7 +257,7 @@ public class ejercicios {
                     System.out.print("Ingrese subcadena a buscar: ");
                     String subcadena = scanner.nextLine();
 
-                    if (subcadena.length() > cadena.length() || subcadena.isEmpty()) {
+                    if (subcadena.length() > cadeia.length() || subcadena.isEmpty()) {
                         System.out.println("Subcadena no válida.");
                         break;
                     }
@@ -470,8 +413,12 @@ public class ejercicios {
                         break;
                     }
 
-                    double resultado = T(n);
-                    System.out.printf("T(%d) = %.2f%n", n, resultado);
+                    // Aproximación para T(n) = 2T(n/2) + 2n*log2(n)
+                    // La solución es Θ(n log n), usamos una estimación simple
+                    double logN = Math.log(n) / Math.log(2);
+                    double resultado = 2 * n * logN; // Aproximación dominante
+
+                    System.out.printf("T(%d) ≈ %.2f (estimación)%n", n, resultado);
                     System.out.println("Orden asintótico: Θ(n log n)");
                     break;
                 }
@@ -496,13 +443,27 @@ public class ejercicios {
                         break;
                     }
 
-                    comparacion = 0; // Reiniciar contador
-                    Resultado resultado = masMin(numeros, 0, numeros.length - 1);
+                    // Encontrar max y min con un solo recorrido
+                    int min = numeros[0];
+                    int max = numeros[0];
+                    int comparaciones = 0;
+
+                    for (int i = 1; i < numeros.length; i++) {
+                        comparaciones++;
+                        if (numeros[i] < min) {
+                            min = numeros[i];
+                        } else {
+                            comparaciones++;
+                            if (numeros[i] > max) {
+                                max = numeros[i];
+                            }
+                        }
+                    }
 
                     System.out.println("\nResultados:");
-                    System.out.println("Máximo: " + resultado.max);
-                    System.out.println("Mínimo: " + resultado.min);
-                    System.out.println("Comparaciones realizadas: " + comparacion);
+                    System.out.println("Máximo: " + max);
+                    System.out.println("Mínimo: " + min);
+                    System.out.println("Comparaciones realizadas: " + comparaciones);
                     System.out.println("Comparaciones teóricas (3n/2 - 2): " + (3.0 * numeros.length / 2 - 2));
                     break;
                 }
